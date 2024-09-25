@@ -4,8 +4,14 @@ import { Timer } from 'three/addons/misc/Timer.js'
 import GUI from 'lil-gui'
 
 
+
+//Textures
+
 const textureLoader = new THREE.TextureLoader()
 const doorTexture=textureLoader.load('/door/color.jpg')
+const floorAlphaTexture=textureLoader.load('./floor/alpha.jpg')
+const groundAlphaTexture=textureLoader.load('./floor/Ground.jpg')
+const brickTexture=textureLoader.load('./floor/brick.jpg')
 
 /**
  * Base
@@ -28,7 +34,14 @@ const scene = new THREE.Scene()
  
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(20,20),
-    new THREE.MeshStandardMaterial()
+    new THREE.MeshStandardMaterial(
+        {
+            alphaMap:floorAlphaTexture,
+            transparent:true,
+            map:groundAlphaTexture
+            
+        }
+    )
 )
 floor.rotation.x=-Math.PI*0.5
 scene.add(floor)
@@ -41,7 +54,9 @@ scene.add(house)
 //wals
 const walls = new THREE.Mesh(
     new THREE.BoxGeometry(4,2.5,4),
-    new THREE.MeshStandardMaterial()
+    new THREE.MeshStandardMaterial({
+        map:brickTexture
+    })
 )
 walls.position.y+=1.25
 house.add(walls)
@@ -98,13 +113,17 @@ scene.add(graves)
 
 for (let i=0;i < 30;i++){
      const angle=Math.random()*Math.PI*2
-     const radius=4
+     const radius=3+Math.random()*4
      const x = Math.sin(angle)*radius
      const z = Math.cos(angle)*radius
     //Mesh
     const grave =new THREE.Mesh(graveGeometry,graveMaterial)
     grave.position.x=x
+    grave.position.y=Math.random()*0.4
     grave.position.z=z
+    grave.rotation.x=(Math.random()-0.5)*0.4
+    grave.rotation.y=(Math.random()-0.5)*0.4
+    grave.rotation.z=(Math.random()-0.5)*0.4
 
     //add to grave group
     graves.add(grave)
