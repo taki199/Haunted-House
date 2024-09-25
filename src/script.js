@@ -10,9 +10,18 @@ import GUI from 'lil-gui'
 const textureLoader = new THREE.TextureLoader()
 const doorTexture=textureLoader.load('/door/color.jpg')
 const floorAlphaTexture=textureLoader.load('./floor/alpha.jpg')
+const floorNormalTexture=textureLoader.load('./floor/normal.jpg')
+const floorAoTexture=textureLoader.load('./floor/aoMap.jpg')
 const groundAlphaTexture=textureLoader.load('./floor/Ground.jpg')
 const brickTexture=textureLoader.load('./floor/brick.jpg')
+const ColorGrassTexture=textureLoader.load('./floor/grass/Poliigon_GrassPatchyGround_4585_BaseColor.jpg')
 
+floorAlphaTexture.colorSpace=THREE.SRGBColorSpace
+ColorGrassTexture.colorSpace=THREE.SRGBColorSpace
+
+// floorAlphaTexture.repeat.set(10,10)
+// floorAlphaTexture.wrapS=THREE.RepeatWrapping
+// floorAlphaTexture.wrapT=THREE.RepeatWrapping
 /**
  * Base
  */
@@ -38,7 +47,8 @@ const floor = new THREE.Mesh(
         {
             alphaMap:floorAlphaTexture,
             transparent:true,
-            map:groundAlphaTexture
+            map:ColorGrassTexture,
+            aoMap:floorAoTexture
             
         }
     )
@@ -64,7 +74,9 @@ house.add(walls)
 //roof 
 const roof = new THREE.Mesh(
     new THREE.ConeGeometry(3.5,1.5,4),
-    new THREE.MeshStandardMaterial()
+    new THREE.MeshStandardMaterial({
+        map:brickTexture
+    })
 )
 roof.position.y+=2.5+0.75
 roof.rotation.y=Math.PI/4
@@ -83,7 +95,7 @@ house.add(door)
 
 //Bushes
 const bushGeometry=new THREE.SphereGeometry(1,16,16)
-const bushMaterial=new THREE.MeshStandardMaterial({color:'green'})
+const bushMaterial=new THREE.MeshStandardMaterial({map:ColorGrassTexture})
 
 const bush1=new THREE.Mesh(bushGeometry,bushMaterial)
 bush1.scale.set(0.5,0.5,0.5)
@@ -106,7 +118,9 @@ house.add(bush1,bush2,bush3,bush4)
 
 //Graves
 const graveGeometry = new THREE.BoxGeometry(0.6,0.8,0.2)
-const graveMaterial=new THREE.MeshStandardMaterial()
+const graveMaterial=new THREE.MeshStandardMaterial({
+    map:brickTexture
+})
 
 const graves = new THREE.Group()
 scene.add(graves)
